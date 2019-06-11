@@ -1,0 +1,21 @@
+{
+  "name": "foodie",
+  "version": "1.0.0",
+  "description": "Basic application for recipe search implemented on food2fork api",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "keywords": [
+    "Food",
+    "Recepie's",
+    "Craving",
+    "Cooking"
+  ],
+  "author": "Gurpreet Singh",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
