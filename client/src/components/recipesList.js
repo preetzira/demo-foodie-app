@@ -18,6 +18,16 @@ class RecipesList extends Component {
         isLoading:false
     }
 
+    handleSubmit = () => {
+        this.setState({
+            page:1,
+            recipes:[],
+            isLoading:true
+        }, () => {
+            this.getRecipes()
+        })
+    }
+
     getRecipes = async () => {
         const currentSearch = this.state.searchString
         const lastSearch = this.state.lastSearch
@@ -40,18 +50,21 @@ class RecipesList extends Component {
     }
 
     componentDidMount(){
-      window.addEventListener('scroll',(e) => {
-        if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
-        window.requestAnimationFrame(()=>window.scrollBy(0,-500))
-        this.setState({page:this.state.page+1,isLoading:true})
-        this.getRecipes()
-      })
+        let isProcessed = false
+        window.addEventListener('scroll',(e) => {
+            if (((window.innerHeight + document.documentElement.scrollTop)/document.documentElement.offsetHeight)*100 > 80 && !isProcessed) { isProcessed = !isProcessed; return;}
+            if(isProcessed) {
+                isProcessed = false
+                this.setState({page:this.state.page+1,isLoading:true})
+                this.getRecipes()
+            }
+        })
     }
 
     render() {
         return (
             <div>
-              <form align="center" style={{marginTop : 100, marginBottom : 20}} action="javascript:void(0)" onSubmit={this.getRecipes}>
+              <form align="center" style={{marginTop : 100, marginBottom : 20}} action="javascript:void(0)" onSubmit={this.handleSubmit}>
                 <TextField
                     id="searchInput"
                     placeholder="Cake,Smoothie,Shake's..."
