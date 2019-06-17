@@ -52,7 +52,7 @@ class RecipesList extends Component {
     componentDidMount(){
         let isProcessed = false
         window.addEventListener('scroll',(e) => {
-            if (((window.innerHeight + document.documentElement.scrollTop)/document.documentElement.offsetHeight)*100 > 80 && !isProcessed) { isProcessed = !isProcessed; return;}
+            if (((window.innerHeight + document.documentElement.scrollTop)/document.documentElement.offsetHeight)*100 > 95 && !isProcessed) { isProcessed = !isProcessed; return;}
             if(isProcessed) {
                 isProcessed = false
                 this.setState({page:this.state.page+1,isLoading:true})
