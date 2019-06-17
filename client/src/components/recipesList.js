@@ -35,7 +35,6 @@ class RecipesList extends Component {
           const url = `https://www.food2fork.com/api/search?key=${API_KEY}&q=${currentSearch}&page=${this.state.page}`
           const data = await fetch(url)
           const recipes = await data.json();
-          console.log(recipes)
           if(!recipes.recipes.length){
             this.setState({
                 isNotfound:true
@@ -45,7 +44,6 @@ class RecipesList extends Component {
             this.setState({recipes:[...this.state.recipes,...recipes.recipes],isLoading:false})
           }
         } catch (e) {
-          console.log(`Something went wrong ${e}`);
           if(e.message === 'no recipes found'){
             this.setState({recipes:[]})
           } else this.setState({recipes:[],isExhausted:true,isLoading:false})
@@ -70,7 +68,6 @@ class RecipesList extends Component {
     }
 
     render() {
-        console.log(this.state.isLoading && !this.state.isExhausted)
         return (
             <div>
               <form align="center" style={{marginTop : 100, marginBottom : 20, display:'flex',justifyContent:'center'}} action="javascript:void(0)" onSubmit={this.handleSubmit}>
