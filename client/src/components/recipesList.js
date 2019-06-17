@@ -15,7 +15,8 @@ class RecipesList extends Component {
         searchString: '',
         lastSearch:'',
         page:1,
-        isLoading:false
+        isLoading:false,
+        isExhausted:false
     }
 
     handleSubmit = () => {
@@ -42,7 +43,7 @@ class RecipesList extends Component {
           }
         } catch (e) {
           console.log(`Something went wrong ${e}`);
-          this.setState({recipes:[]})
+          this.setState({recipes:[],isExhausted:true})
         }
     }
     onSearchInputChange = (event) => {
@@ -77,7 +78,7 @@ class RecipesList extends Component {
                     />
                 <Button variant="outlined" color="primary" size="large" type="submit" style={{marginTop:9,padding:9.5,marginLeft:5}}>Submit</Button>
               </form>
-                { this.state.recipes.length ? (
+                { this.state.isExhausted ? (
                     <Grid container style={{padding:30}} justify="space-around">
                             { this.state.recipes.map((currentRecipe,index) => (
                                 <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
@@ -85,7 +86,7 @@ class RecipesList extends Component {
                                 </Grid>
                             ))}
                     </Grid>
-                ) : <Typography align="center">no recipes found for "{React.createElement("b",{},this.state.searchString)}"</Typography> }
+                ) : <Typography align="center">Sorry! daily quota of 50 free requests has been exhausted</Typography> }
                 {this.state.isLoading ? <div align="center" justify="center" style={{marginTop:50,marginBottom:50}} >
                   <CircularProgress />
                 </div> : null}
