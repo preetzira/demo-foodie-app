@@ -13,10 +13,10 @@ class RecipesList extends Component {
     state = {
         recipes: [],
         searchString: '',
-        lastSearch:'',
-        page:1,
+        page:0,
         isLoading:false,
-        isExhausted:false
+        isExhausted:false,
+        isNotfound:false
     }
 
     handleSubmit = () => {
@@ -31,31 +31,38 @@ class RecipesList extends Component {
 
     getRecipes = async () => {
         const currentSearch = this.state.searchString
-        const lastSearch = this.state.lastSearch
         try {
-          const url = `https://www.food2fork.com/api/search?key=${API_KEY}&q=${currentSearch.length ? currentSearch : lastSearch}&page=${this.state.page}`
+          const url = `https://www.food2fork.com/api/search?key=${API_KEY}&q=${currentSearch}&page=${this.state.page}`
           const data = await fetch(url)
           const recipes = await data.json();
-          if(!recipes.count && !this.state.page){
+          console.log(recipes)
+          if(!recipes.recipes.length){
+            this.setState({
+                isNotfound:true
+            })
             throw new Error('no recipes found')
           } else {
-            this.setState({recipes:[...this.state.recipes,...recipes.recipes], searchString:'',isLoading:false})
+            this.setState({recipes:[...this.state.recipes,...recipes.recipes],isLoading:false})
           }
         } catch (e) {
           console.log(`Something went wrong ${e}`);
-          this.setState({recipes:[],isExhausted:true})
+          if(e.message === 'no recipes found'){
+            this.setState({recipes:[]})
+          } else this.setState({recipes:[],isExhausted:true,isLoading:false})
+          
         }
     }
     onSearchInputChange = (event) => {
-        this.setState({searchString: event.target.value, lastSearch: event.target.value})
+        this.setState({searchString: event.target.value,isNotfound:false,isLoading:false})
     }
 
     componentDidMount(){
         let isProcessed = false
         window.addEventListener('scroll',(e) => {
-            if (((window.innerHeight + document.documentElement.scrollTop)/document.documentElement.offsetHeight)*100 > 95 && !isProcessed) { isProcessed = !isProcessed; return;}
+            if (window.innerHeight + document.documentElement.scrollTop - document.documentElement.offsetHeight > -10 && !isProcessed) { isProcessed = !isProcessed; return;}
             if(isProcessed) {
                 isProcessed = false
+                window.scrollBy(0,-300)
                 this.setState({page:this.state.page+1,isLoading:true})
                 this.getRecipes()
             }
@@ -63,9 +70,10 @@ class RecipesList extends Component {
     }
 
     render() {
+        console.log(this.state.isLoading && !this.state.isExhausted)
         return (
             <div>
-              <form align="center" style={{marginTop : 100, marginBottom : 20}} action="javascript:void(0)" onSubmit={this.handleSubmit}>
+              <form align="center" style={{marginTop : 100, marginBottom : 20, display:'flex',justifyContent:'center'}} action="javascript:void(0)" onSubmit={this.handleSubmit}>
                 <TextField
                     id="searchInput"
                     placeholder="Cake,Smoothie,Shake's..."
@@ -75,10 +83,14 @@ class RecipesList extends Component {
                     onChange={this.onSearchInputChange}
                     value={this.state.searchString}
                     justify="center"
-                    />
-                <Button variant="outlined" color="primary" size="large" type="submit" style={{marginTop:9,padding:9.5,marginLeft:5}}>Submit</Button>
+                    type="search"
+                    required
+                    InputLabelProps={{ required: false }}
+                />
+                <Button variant="outlined" color="primary" size="large" type="submit" style={{marginTop:9,height: 47.2,marginLeft:5}}>Submit</Button>
               </form>
-                { this.state.isExhausted ? (
+                { this.state.isExhausted ? (<Typography align="center" style={{color:"#cc0000"}}><b>Pardon!</b> daily api requests limit reached.</Typography>)
+                : this.state.recipes.length ? (
                     <Grid container style={{padding:30}} justify="space-around">
                             { this.state.recipes.map((currentRecipe,index) => (
                                 <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
@@ -86,8 +98,9 @@ class RecipesList extends Component {
                                 </Grid>
                             ))}
                     </Grid>
-                ) : <Typography align="center">Sorry! daily quota of 50 free requests has been exhausted</Typography> }
-                {this.state.isLoading ? <div align="center" justify="center" style={{marginTop:50,marginBottom:50}} >
+                ) : null}
+                { this.state.isNotfound && !this.state.isExhausted ? <Typography align="center"><span>no recipes found for "<strong>{this.state.searchString}</strong>"</span></Typography> : null }
+                { this.state.isLoading && !this.state.isNotfound ? <div align="center" justify="center" style={{marginTop:50,marginBottom:50}} >
                   <CircularProgress />
                 </div> : null}
             </div>

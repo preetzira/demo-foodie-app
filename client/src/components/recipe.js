@@ -35,30 +35,28 @@ const Recipe = (props) => {
     const classes = useStyles();
     return(
         <div>
-            { props.recipe ? (
-                <Card className="card-slide" style={{margin:10}}>
-                    <CardMedia className={classes.media}
-                    image={props.recipe.image_url}
-                    title={props.recipe.title}
-                    />
-                    <CardContent style={{paddingBottom:0}}>
-                      <Typography gutterBottom variant="inherit" component="h4">
-                          {props.recipe.title.length < 25 ? props.recipe.title : `${props.recipe.title.substring(0,25)}...`}
-                      </Typography>
-                      <Typography component="span">
-                          <small><strong>Publisher: </strong>{props.recipe.publisher}</small>
-                      </Typography>
-                    </CardContent>
-                    <CardActions disableSpacing>
-                      <Button size="small" color="primary" href={props.recipe.source_url} target="_blank" rel="noopener noreferrer">
-                        Source
-                      </Button>
-                      <Button size="small" color="primary" href={props.recipe.f2f_url} target="_blank" rel="noopener noreferrer">
-                        View
-                      </Button>
-                    </CardActions>
-                </Card>
-            ) : null}
+            <Card className="card-slide" style={{margin:10}}>
+                <CardMedia className={classes.media}
+                image={props.recipe.image_url}
+                title={props.recipe.title}
+                />
+                <CardContent style={{paddingBottom:0}}>
+                  <Typography gutterBottom variant="inherit" component="h4">
+                      {props.recipe.title.length < 25 ? props.recipe.title : `${props.recipe.title.substring(0,25)}...`}
+                  </Typography>
+                  <Typography component="span">
+                      <small><strong>Publisher: </strong>{props.recipe.publisher}</small>
+                  </Typography>
+                </CardContent>
+                <CardActions disableSpacing>
+                  <Button size="small" color="primary" href={props.recipe.source_url} target="_blank" rel="noopener noreferrer">
+                    Source
+                  </Button>
+                  <Button size="small" color="primary" href={props.recipe.f2f_url} target="_blank" rel="noopener noreferrer">
+                    View
+                  </Button>
+                </CardActions>
+            </Card>
         </div>
     )
 }
