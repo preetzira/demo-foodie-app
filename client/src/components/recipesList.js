@@ -51,7 +51,7 @@ class RecipesList extends Component {
     render() {
         return (
             <div>
-              <form align="center" style={{marginTop : 100, marginBottom : 20}} action="javscript:void(0)" onSubmit={this.getRecipes}>
+              <form align="center" style={{marginTop : 100, marginBottom : 20}} action="javascript:void(0)" onSubmit={this.getRecipes}>
                 <TextField
                     id="searchInput"
                     placeholder="Cake,Smoothie,Shake's..."
